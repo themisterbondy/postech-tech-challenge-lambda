@@ -1,9 +1,7 @@
 const { Client } = require('pg');
-const bcrypt = require('bcrypt');
-
 
 module.exports.autenticar = async (event) => {
-    const { cpf, senha } = JSON.parse(event.body);
+    const { cpf, email } = JSON.parse(event.body);
 
     const client = new Client({
         user: process.env.DB_USER,
@@ -16,7 +14,7 @@ module.exports.autenticar = async (event) => {
     try {
         await client.connect();
 
-        const res = await client.query('SELECT senha FROM usuarios WHERE cpf = $1', [cpf]);
+        const res = await client.query('SELECT * FROM Customer WHERE cpf = $1 AND email = $2', [cpf, email]);
 
         if (res.rows.length === 0) {
             return {
@@ -24,17 +22,6 @@ module.exports.autenticar = async (event) => {
                 body: JSON.stringify({ message: 'Usuário não encontrado' }),
             };
         }
-
-        const user = res.rows[0];
-        const isPasswordValid = await bcrypt.compare(senha, user.senha);
-
-        if (!isPasswordValid) {
-            return {
-                statusCode: 401,
-                body: JSON.stringify({ message: 'Senha incorreta' }),
-            };
-        }
-
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Autenticação bem-sucedida' }),
