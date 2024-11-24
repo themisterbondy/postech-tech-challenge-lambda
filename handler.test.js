@@ -3,7 +3,7 @@ const { autenticar } = require('./handler');
 const { mockDeep } = require('jest-mock-extended');
 
 jest.mock('pg', () => {
-  const mClient = mockDeep<Client>();
+  const mClient = mockDeep();
   return { Client: jest.fn(() => mClient) };
 });
 
