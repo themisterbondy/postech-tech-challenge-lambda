@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "pg": "^8.13.1",
+    "serverless": "^4.4.11",
+    "serverless-offline": "^14.3.4"
+  }
+}

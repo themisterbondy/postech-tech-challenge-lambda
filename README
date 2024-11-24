@@ -1,0 +1,14 @@
+
+Dependências
+Certifique-se de instalar as dependências necessárias:
+
+```npm install pg bcrypt serverless serverless-offline```
+
+Deploy
+Para fazer o deploy da função Lambda e do API Gateway, execute:
+
+```serverless deploy```
+
+Para testar localmente, você pode usar o plugin serverless-offline:
+
+```serverless offline```
