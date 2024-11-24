@@ -1,15 +1,16 @@
 const { Client } = require('pg');
 const bcrypt = require('bcrypt');
 
+
 module.exports.autenticar = async (event) => {
     const { cpf, senha } = JSON.parse(event.body);
 
     const client = new Client({
-        user: 'seu_usuario',
-        host: 'seu_host',
-        database: 'seu_banco',
-        password: 'sua_senha',
-        port: 5432,
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,
+        database: process.env.DB_NAME,
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT,
     });
 
     try {
