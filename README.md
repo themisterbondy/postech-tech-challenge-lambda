@@ -13,17 +13,23 @@ Este projeto implementa uma função AWS Lambda em Node.js que autentica um usu�
 
 Certifique-se de instalar as dependências necessárias:
 
-```npm install pg bcrypt serverless serverless-offline```
+```sh
+npm install pg bcrypt serverless serverless-offline
+```
 
 ## Deploy local:
 
 Para fazer o deploy da função Lambda e do API Gateway, execute:
 
-```serverless deploy```
+```sh
+serverless deploy
+```
 
 Para testar localmente, você pode usar o plugin serverless-offline:
 
-```serverless offline```
+```sh
+serverless offline
+```
 
 ------------------------------------------------------
 ## Terraform
@@ -31,9 +37,16 @@ Para testar localmente, você pode usar o plugin serverless-offline:
 Empacotamento da Função Lambda: 
 Crie um arquivo lambda.zip contendo o arquivo handler.js e a pasta node_modules:
 
-
-```zip -r lambda.zip handler.js node_modules```
+```sh
+zip -r lambda.zip handler.js node_modules
+```
 
 terraform: 
-```terraform init```
-```terraform apply```
+
+
+```sh
+terraform init
+```
+```sh
+terraform apply
+```
