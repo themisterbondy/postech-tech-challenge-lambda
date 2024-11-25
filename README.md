@@ -30,24 +30,3 @@ Para testar localmente, você pode usar o plugin serverless-offline:
 ```sh
 serverless offline
 ```
-
-## Terraform
-
-Empacotamento da Função Lambda:
-
-Crie um arquivo lambda.zip contendo o arquivo handler.js e a pasta node_modules:
-
-
-```sh
-zip -r lambda.zip handler.js node_modules
-```
-
-terraform: 
-
-```sh
-terraform init
-```
-
-```sh
-terraform apply
-```

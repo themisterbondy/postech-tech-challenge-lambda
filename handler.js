@@ -14,7 +14,7 @@ module.exports.autenticar = async (event) => {
     try {
         await client.connect();
 
-        const res = await client.query('SELECT * FROM Customer WHERE cpf = $1 AND email = $2', [cpf, email]);
+        const res = await client.query('SELECT * FROM Customer WHERE cpf = $1 OR email = $2', [cpf, email]);
 
         if (res.rows.length === 0) {
             return {
