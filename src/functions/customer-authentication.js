@@ -11,6 +11,7 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 5000,
+    ssl: true
 });
 
 
@@ -30,6 +31,9 @@ app.http('customer-authentication', {
             context.error(`CPF inválido: ${cpf}`);
             return {
                 status: 400,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ message: 'CPF inválido' }),
             };
         }
@@ -49,12 +53,24 @@ app.http('customer-authentication', {
                 context.error(`Nenhum usuário encontrado com o CPF: ${cpf}`);
                 return {
                     status: 401,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ message: 'Usuário não encontrado' }),
                 };
             }
             // Usuário encontrado
             const customer = res.rows[0];
             context.info(`Usuário encontrado com sucesso: ${JSON.stringify(customer)}`);
+
+
+            return {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ customer }),
+            };
 
             return {
                 status: 200,
