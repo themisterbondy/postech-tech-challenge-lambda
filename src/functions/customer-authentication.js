@@ -1,6 +1,18 @@
-const {app} = require('@azure/functions');
-const {Pool} = require('pg');
-const {cpf: cpfValidator} = require('cpf-cnpj-validator');
+const { app } = require('@azure/functions');
+const { Pool } = require('pg');
+const { cpf: cpfValidator } = require('cpf-cnpj-validator');
+
+// Conectando ao banco de dados
+const pool = new Pool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 5000,
+});
+
 
 app.http('customer-authentication', {
     methods: ['POST'],
@@ -10,7 +22,7 @@ app.http('customer-authentication', {
         context.info('Iniciando autenticação de cliente.');
 
         // Obtendo o CPF do corpo da requisição
-        const {cpf} = await request.json();
+        const { cpf } = await request.json();
         context.info(`CPF recebido para autenticação: ${cpf}`);
 
         // Validação do CPF
@@ -18,24 +30,16 @@ app.http('customer-authentication', {
             context.error(`CPF inválido: ${cpf}`);
             return {
                 status: 400,
-                body: JSON.stringify({message: 'CPF inválido'}),
+                body: JSON.stringify({ message: 'CPF inválido' }),
             };
         }
 
-        // Conectando ao banco de dados
-        const pool = new Pool({
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT,
-            database: process.env.DB_NAME,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-        });
-        context.info('Tentando conexão ao banco de dados...');
-
-        const client = await pool.connect();
-        context.info('Conexão ao banco de dados realizada com sucesso.')
-
         try {
+
+            context.info('Tentando conexão ao banco de dados...');
+            const client = await pool.connect();
+            context.info('Conexão ao banco de dados realizada com sucesso.')
+
             // Executando consulta SQL
             context.info(`Executando consulta no banco para CPF: ${cpf}`);
             const query = 'SELECT * FROM "Customers" WHERE "Cpf" = $1';
@@ -45,7 +49,7 @@ app.http('customer-authentication', {
                 context.error(`Nenhum usuário encontrado com o CPF: ${cpf}`);
                 return {
                     status: 401,
-                    body: JSON.stringify({message: 'Usuário não encontrado'}),
+                    body: JSON.stringify({ message: 'Usuário não encontrado' }),
                 };
             }
             // Usuário encontrado
@@ -53,11 +57,11 @@ app.http('customer-authentication', {
             context.info(`Usuário encontrado com sucesso: ${JSON.stringify(customer)}`);
 
             return {
-                statusCode: 200,
+                status: 200,
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({customer}),
+                body: JSON.stringify({ customer }),
             };
 
         } catch (error) {
