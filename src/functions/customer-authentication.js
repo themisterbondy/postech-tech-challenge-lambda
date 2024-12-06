@@ -65,7 +65,7 @@ app.http('customer-authentication', {
 
 
             return {
-                status: 400,
+                status: 200,
                 headers: {
                     'Content-Type': 'application/json'
                 },
